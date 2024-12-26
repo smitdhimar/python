@@ -34,6 +34,13 @@ y=dataset['Air Quality'];
 
 trainX,testX,trainY,testY=train_test_split(X,y, random_state=30, test_size=0.3)
 
+"""Now trying to use feature selection for getting better accuracy , here I will use the bestKScore algorithm and apply chi2 score function to it"""
+
+from sklearn.feature_selection import SelectKBest, chi2, f_classif
+selector=SelectKBest(score_func=f_classif, k=8)
+trainX=selector.fit_transform(trainX,trainY)
+testX=selector.transform(testX)
+
 """it seems like that i should first go with the random forest classifier"""
 
 from sklearn.ensemble import RandomForestClassifier
@@ -41,11 +48,17 @@ from sklearn.ensemble import RandomForestClassifier
 model=RandomForestClassifier();
 model.fit(trainX,trainY)
 
+predY=model.predict(testX);
+print("accuracy: ", accuracy_score(predY,testY))
+
 """Now trying decision tree"""
 
 from sklearn.tree import DecisionTreeClassifier
 model=DecisionTreeClassifier()
 model.fit(trainX,trainY)
+
+predY=model.predict(testX);
+print("accuracy: ", accuracy_score(predY,testY))
 
 """Now trying knn"""
 
